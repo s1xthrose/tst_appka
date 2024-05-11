@@ -1,0 +1,62 @@
+name: tst_appka
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.5 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  image_picker: ^1.0.4
+  image: ^3.0.1
+  device_preview: ^1.1.0
+  shared_preferences: ^2.0.0
+  flutter_screenutil: ^5.9.0
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.1
+  google_fonts: ^6.1.0
+  intl: ^0.18.1
+  dots_indicator: ^2.0.0
+  smooth_page_indicator: ^1.1.0
+  hexcolor: ^2.0.1
+  flutter_svg: ^0.22.0
+  flutter_localizations:
+    sdk: flutter
+  in_app_review: ^2.0.9
+  url_launcher: ^6.2.6
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.9
+  path_provider: ^2.1.3
+  permission_handler: ^11.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Enable generation of localized Strings from arb files.
+  generate: true
+
+  assets:
+    - assets/splash/icon_1.svg
+    - assets/onboarding/icon_2.png
+    - assets/onboarding/icon_3.png
+    - assets/onboarding/icon_4.png
+    - assets/shoecare/shoe.png
+    - assets/shoecare/11.png
+    - assets/shoecare/22.png
+    - assets/shoecare/33.png
+    - assets/shoecare/44.png
+    - assets/addshoe/icon_1.png
+    - assets/addshoe/icon_placeholder.png
+    - assets/mat/icon_material_placeholder.png
