@@ -67,12 +67,14 @@ class ShoeDetailsPage extends StatelessWidget {
                         child: Text("Удалить"),
                         onPressed: () {
                           // Получаем экземпляр Hive Box
-                          var box = Hive.box<WorkModel>('works');
+                          var box = Hive.box<ShoeModel>('shoes');
                           // Удаляем запись из Hive Box
                           box.delete(shoe.key);
                           // Перенаправляем на домашнюю страницу
                           Navigator.pushReplacement(
-                              context, MaterialPageRoute(builder: (context) => ShoeMainPage()));
+                            context,
+                            MaterialPageRoute(builder: (context) => ShoeMainPage()),
+                          );
                         },
                       ),
                       // Кнопка для редактирования записи

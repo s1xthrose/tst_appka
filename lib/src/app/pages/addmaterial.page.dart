@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tst_appka/src/app/pages/materialmain.page.dart';
 
@@ -218,9 +219,10 @@ class _AddNewMaterial extends State<AddNewMaterial> {
               ),
               SizedBox(height: 2),
               TextFormField(
+                keyboardType: TextInputType.number,
                 controller: countController,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]+')), // разрешаем только буквы и цифры без символов
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]+')), // разрешаем только буквы и цифры без символов
                 ],
                 focusNode: countFocus,
                 onTap: () {
@@ -266,6 +268,7 @@ class _AddNewMaterial extends State<AddNewMaterial> {
           commentController: commentController,
           countController: countController,
           imagePath: _pickedImage?.path,
+          imageFile: _pickedImage,
         ),
       ),
     );
@@ -273,19 +276,18 @@ class _AddNewMaterial extends State<AddNewMaterial> {
 }
 
 class AddNewMaterialButton extends StatelessWidget {
-
   final TextEditingController nameController;
   final TextEditingController commentController;
   final TextEditingController countController;
+  final File? imageFile; // Corrected parameter name
   final String? imagePath;
 
-
   const AddNewMaterialButton({
-
     required this.nameController,
     required this.commentController,
     required this.countController,
-    this.imagePath,
+    required this.imageFile,
+    required this.imagePath,
   });
 
   @override
@@ -304,23 +306,25 @@ class AddNewMaterialButton extends StatelessWidget {
         ),
         onPressed: () async {
           int uniqueId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+          String? savedImagePath;
 
-          // Создаем экземпляр модели работы
+          if (imageFile != null) {
+            savedImagePath = await _copyImage(imageFile!);
+          } else if (imagePath != null) {
+            savedImagePath = await _copyImage(File(imagePath!));
+          }
+
           MaterialModel mat = MaterialModel(
             name: nameController.text,
             comment: commentController.text,
             count: countController.text,
-            imagePath: imagePath,
+            imagePath: savedImagePath,
             id: uniqueId,
           );
 
-          // Открываем Hive box для работы с данными
           var materialBox = await Hive.openBox<MaterialModel>('Mater');
-
-          // Сохраняем данные в Hive
           await materialBox.put(uniqueId, mat);
 
-          // Переходим на главную страницу
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => MaterialMainPage()),
@@ -336,6 +340,14 @@ class AddNewMaterialButton extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<String> _copyImage(File imageFile) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    final newImagePath = '${directory.path}/$fileName.png';
+    await imageFile.copy(newImagePath);
+    return newImagePath;
   }
 }
 

@@ -49,9 +49,6 @@ class _EditWrkState extends State<EditWrk> {
     nameController.text = widget.work.name;
     costController.text = widget.work.cost;
     commentController.text = widget.work.comment;
-    //shoeController.text = widget.work.shoe;
-    // Initialize materialControllers based on the materials in the work object
-    materialControllers = widget.work.materials.map((material) => TextEditingController(text: material)).toList();
 
     openShoeBox().then((_) {
       setState(() {});
@@ -60,18 +57,6 @@ class _EditWrkState extends State<EditWrk> {
     openMaterialBox().then((_) {
       setState(() {});
     });
-  }
-
-  Future<void> openShoeBox() async {
-    if (!Hive.isBoxOpen('Shoes')) {
-      shoeBox = await Hive.openBox<ShoeModel>('Shoes');
-    }
-  }
-
-  Future<void> openMaterialBox() async {
-    if (!Hive.isBoxOpen('Mater')) {
-      materialBox = await Hive.openBox<MaterialModel>('Mater');
-    }
   }
 
   @override
@@ -90,7 +75,21 @@ class _EditWrkState extends State<EditWrk> {
     materialBox.close();
     super.dispose();
   }
+  Future<void> openShoeBox() async {
+    if (!Hive.isBoxOpen('Shoes')) {
+      shoeBox = await Hive.openBox<ShoeModel>('Shoes');
+    } else {
+      shoeBox = Hive.box<ShoeModel>('Shoes');
+    }
+  }
 
+  Future<void> openMaterialBox() async {
+    if (!Hive.isBoxOpen('Mater')) {
+      materialBox = await Hive.openBox<MaterialModel>('Mater');
+    } else {
+      materialBox = Hive.box<MaterialModel>('Mater');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -238,7 +237,7 @@ class _EditWrkState extends State<EditWrk> {
               ),
               SizedBox(height: 2),
               TextFormField(
-
+                keyboardType: TextInputType.number,
                 controller: costController,
                 focusNode: costFocus,
                 onTap: () {
@@ -247,7 +246,7 @@ class _EditWrkState extends State<EditWrk> {
                   }
                 },
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]+')), // разрешаем только буквы и цифры без символов
+                  FilteringTextInputFormatter.allow(RegExp(r'[а-яА-Я\s]*')), // разрешаем только буквы и цифры без символов
                 ],
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),

@@ -31,7 +31,7 @@ class _SplashPageState extends State<SplashPage> {
       });
     } else {
       Timer(const Duration(seconds: 1), () {
-        Navigator.of(context).pushReplacementNamed('/on_boarding');
+        Navigator.of(context).pushReplacementNamed('/home');
       });
     }
   }

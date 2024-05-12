@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'addshoe.page.dart';
@@ -28,6 +29,7 @@ class EditNewShoe extends StatefulWidget {
 }
 
 class _EditNewShoeState extends State<EditNewShoe> {
+  String? imagePath;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController markController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
@@ -59,18 +61,28 @@ class _EditNewShoeState extends State<EditNewShoe> {
     super.dispose();
   }
   Future<void> _pickImage() async {
+    // Request permission to access the photo library
     var status = await Permission.photos.request();
     if (status.isDenied) {
+      // Permission denied
       return;
     }
 
-    final pickedImageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedImageFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     if (pickedImageFile == null) {
       return;
     }
+
+    // Get the device directory path
+    final directory = await getApplicationDocumentsDirectory();
+    // Extract only the file name
+    final fileName = pickedImageFile.path.split('/').last;
     final pickedImage = File(pickedImageFile.path);
     setState(() {
       _pickedImage = pickedImage;
+      imagePath = '${directory.path}/$fileName'; // Save the file path relative to the device directory
     });
   }
   @override
@@ -143,12 +155,12 @@ class _EditNewShoeState extends State<EditNewShoe> {
                   )
                       : ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.file(
-                      _pickedImage!,
+                    child: Image.asset(
+                      'assets/addshoe/icon_placeholder.png',
                       fit: BoxFit.cover,
                       alignment: Alignment.center,
                     ),
-                  )
+                  ),
                 ),
               ),
               SizedBox(height: 12),
@@ -304,7 +316,7 @@ class _EditNewShoeState extends State<EditNewShoe> {
               SizedBox(height: 2),
               TextFormField(
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[а-яА-Я]*')), // разрешаем только символы кириллицы без пробелов и других символов
+                  FilteringTextInputFormatter.allow(RegExp(r'[\p{L}\s]*')),  // разрешаем только символы кириллицы без пробелов и других символов
                 ],
                 controller: fioController,
                 decoration: InputDecoration(
@@ -337,9 +349,10 @@ class _EditNewShoeState extends State<EditNewShoe> {
               ),
               SizedBox(height: 2),
               TextFormField(
+                keyboardType: TextInputType.number,
                 controller: numberController,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]+')), // разрешаем только буквы и цифры без символов
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]+')), // разрешаем только буквы и цифры без символов
                 ],
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),

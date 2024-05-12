@@ -15,58 +15,54 @@ const double _buttonHeight = 50;
 const double _buttonWidth = 0.9;
 
 class AddWrk extends StatefulWidget {
-   late final ShoeModel shoe;
   @override
   _AddWrkState createState() => _AddWrkState();
 }
 
 class _AddWrkState extends State<AddWrk> {
-
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController costController = TextEditingController();
-  final TextEditingController commentController = TextEditingController();
-  final TextEditingController shoeController = TextEditingController();
-  final FocusNode nameFocus = FocusNode();
-  final FocusNode costFocus = FocusNode();
-  final FocusNode commentFocus = FocusNode();
-  final FocusNode shoeFocus = FocusNode();
+  late final ShoeModel shoe;
+  late TextEditingController nameController;
+  late TextEditingController costController;
+  late TextEditingController commentController;
+  late TextEditingController shoeController;
+  late FocusNode nameFocus;
+  late FocusNode costFocus;
+  late FocusNode commentFocus;
+  late FocusNode shoeFocus;
   late DateTime selectedDate;
   late TextEditingController dateController;
   late FocusNode dateFocus;
-  List<TextEditingController> materialControllers = [];
+  late List<TextEditingController> materialControllers;
   late Box<ShoeModel> shoeBox;
   late Box<MaterialModel> materialBox;
+  bool _areBoxesInitialized = false;
 
   @override
   void initState() {
     super.initState();
     selectedDate = DateTime.now();
+    nameController = TextEditingController();
+    costController = TextEditingController();
+    commentController = TextEditingController();
+    shoeController = TextEditingController();
+    nameFocus = FocusNode();
+    costFocus = FocusNode();
+    commentFocus = FocusNode();
+    shoeFocus = FocusNode();
     dateController = TextEditingController();
     dateFocus = FocusNode();
-    // Initialize the first dropdown
-    materialControllers.add(TextEditingController());
+    materialControllers = [TextEditingController()];
 
-    openShoeBox().then((_) {
-      setState(() {});
-    });
-
-    // No need to initialize materialBox here
-
-    openMaterialBox().then((_) {
-      setState(() {});
+    openBoxes().then((_) {
+      setState(() {
+        _areBoxesInitialized = true;
+      });
     });
   }
 
-  Future<void> openShoeBox() async {
-    if (!Hive.isBoxOpen('Shoes')) {
-      shoeBox = await Hive.openBox<ShoeModel>('Shoes');
-    }
-  }
-
-  Future<void> openMaterialBox() async {
-    if (!Hive.isBoxOpen('Mater')) {
-      materialBox = await Hive.openBox<MaterialModel>('Mater');
-    }
+  Future<void> openBoxes() async {
+    shoeBox = await Hive.openBox<ShoeModel>('Shoes');
+    materialBox = await Hive.openBox<MaterialModel>('Mater');
   }
 
   @override
@@ -185,6 +181,7 @@ class _AddWrkState extends State<AddWrk> {
                     initialDate: selectedDate,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2101),
+
                   );
                   if (picked != null && picked != selectedDate) {
                     setState(() {
@@ -233,6 +230,7 @@ class _AddWrkState extends State<AddWrk> {
               ),
               SizedBox(height: 2),
               TextFormField(
+                keyboardType: TextInputType.number,
                 controller: costController,
                 focusNode: costFocus,
                 onTap: () {
@@ -241,7 +239,7 @@ class _AddWrkState extends State<AddWrk> {
                   }
                 },
                 inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]+')), // разрешаем только буквы и цифры без символов
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9]+')), // разрешаем только буквы и цифры без символов
               ],
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),
@@ -323,40 +321,58 @@ class _AddWrkState extends State<AddWrk> {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 2),
-              DropdownButtonFormField<String>(
-                value: null,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    shoeController.text = newValue ?? '';
-                  });
-                },
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      width: 0.5,
-                      color: Color.fromRGBO(0, 0, 0, 0.3),
+              Column(
+                children: [
+                  if (shoeBox.isEmpty) // Проверка на пустой список обуви
+                    Text(
+                      'Список обуви пуст',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                    )
+                  else // Если список не пустой, отображаем дропдаун
+                    Column(
+                      children: [
+                        SizedBox(height: 2),
+                        DropdownButtonFormField<String>(
+                          value: null,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              shoeController.text = newValue ?? '';
+                            });
+                          },
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                width: 0.5,
+                                color: Color.fromRGBO(0, 0, 0, 0.3),
+                              ),
+                            ),
+                            hintText: 'Выберите обувь',
+                            hintStyle: GoogleFonts.inter(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Color.fromRGBO(0, 0, 0, 0.3),
+                            ),
+                          ),
+                          icon: Icon(
+                            CupertinoIcons.chevron_down,
+                            size: 20,
+                          ),
+                          items: shoeBox.values.map<DropdownMenuItem<String>>((shoe) {
+                            return DropdownMenuItem<String>(
+                              value: shoe.name,
+                              child: Text(shoe.name),
+                            );
+                          }).toList(),
+                        ),
+                      ],
                     ),
-                  ),
-                  hintText: 'Выберите обувь',
-                  hintStyle: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Color.fromRGBO(0, 0, 0, 0.3),
-                  ),
-                ),
-                icon: Icon(
-                  CupertinoIcons.chevron_down,
-                  size: 20,
-                ),
-                items: shoeBox.values.map<DropdownMenuItem<String>>((shoe) {
-                  return DropdownMenuItem<String>(
-                    value: shoe.name,
-                    child: Text(shoe.name),
-                  );
-                }).toList(),
+                ],
               ),
               SizedBox(height: 20),
               Text(
@@ -379,47 +395,58 @@ class _AddWrkState extends State<AddWrk> {
               SizedBox(height: 2),
               Column(
                 children: [
-                  for (int i = 0; i < materialControllers.length; i++)
-                    Padding(
-                      padding: EdgeInsets.only(
-                          bottom: i == materialControllers.length - 1 ? 0 : 12),
-                      child: DropdownButtonFormField<String>(
-                        value: null,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            materialControllers[i].text = newValue ?? '';
-                          });
-                        },
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              width: 0.5,
+                  if (materialBox.isEmpty) // Проверка на пустой список материалов
+                    Text(
+                      'Список материалов пуст',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                    )
+                  else // Если список не пустой, отображаем дропдаун
+                    for (int i = 0; i < materialControllers.length; i++)
+                      Padding(
+                        padding: EdgeInsets.only(
+                            bottom: i == materialControllers.length - 1 ? 0 : 12),
+                        child: DropdownButtonFormField<String>(
+                          value: null,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              materialControllers[i].text = newValue ?? '';
+                            });
+                          },
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                width: 0.5,
+                                color: Color.fromRGBO(0, 0, 0, 0.3),
+                              ),
+                            ),
+                            hintText: 'Выберите материал',
+                            hintStyle: GoogleFonts.inter(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
                               color: Color.fromRGBO(0, 0, 0, 0.3),
                             ),
                           ),
-                          hintText: 'Выберите материал',
-                          hintStyle: GoogleFonts.inter(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Color.fromRGBO(0, 0, 0, 0.3),
+                          icon: Icon(
+                            CupertinoIcons.chevron_down,
+                            size: 20,
                           ),
+                          items: materialBox.values.map<DropdownMenuItem<String>>((mat) {
+                            return DropdownMenuItem<String>(
+                              value: mat.name,
+                              child: Text(mat.name),
+                            );
+                          }).toList(),
                         ),
-                        icon: Icon(
-                          CupertinoIcons.chevron_down,
-                          size: 20,
-                        ),
-                        items: materialBox.values.map<DropdownMenuItem<String>>((mat) {
-                          return DropdownMenuItem<String>(
-                            value: mat.name,
-                            child: Text(mat.name),
-                          );
-                        }).toList(),
                       ),
-                    ),
                 ],
               ),
+
               TextButton.icon(
                 onPressed: () {
                   setState(() {

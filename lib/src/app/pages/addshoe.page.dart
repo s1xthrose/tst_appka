@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'shoemain.page.dart';
@@ -23,6 +24,7 @@ class AddNewShoe extends StatefulWidget {
 }
 
 class _AddNewShoe extends State<AddNewShoe> {
+  String? imagePath;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController markController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
@@ -47,11 +49,10 @@ class _AddNewShoe extends State<AddNewShoe> {
     numberController.dispose();
     super.dispose();
   }
+
   Future<void> _pickImage() async {
-    // Request permission to access the photo library
     var status = await Permission.photos.request();
     if (status.isDenied) {
-      // Permission denied
       return;
     }
 
@@ -61,10 +62,20 @@ class _AddNewShoe extends State<AddNewShoe> {
     if (pickedImageFile == null) {
       return;
     }
-    final pickedImage = File(pickedImageFile.path);
+
+    final newImagePath = await _saveImage(File(pickedImageFile.path));
     setState(() {
-      _pickedImage = pickedImage;
+      _pickedImage = File(pickedImageFile.path);
+      imagePath = newImagePath;
     });
+  }
+
+  Future<String> _saveImage(File imageFile) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final fileName = imageFile.path.split('/').last;
+    final newImagePath = '${directory.path}/$fileName';
+    await imageFile.copy(newImagePath);
+    return newImagePath;
   }
 
   @override
@@ -147,7 +158,7 @@ class _AddNewShoe extends State<AddNewShoe> {
               SizedBox(height: 2),
               TextFormField(
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[а-яА-Я]*')), // разрешаем только символы кириллицы без пробелов и других символов
+                  FilteringTextInputFormatter.allow(RegExp(r'[а-яА-Я]*')),
                 ],
                 controller: nameController,
                 focusNode: nameFocus,
@@ -188,7 +199,7 @@ class _AddNewShoe extends State<AddNewShoe> {
               TextFormField(
                 controller: markController,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]+')), // разрешаем только буквы и цифры без символов
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]+')),
                 ],
                 focusNode: markFocus,
                 onTap: () {
@@ -264,7 +275,7 @@ class _AddNewShoe extends State<AddNewShoe> {
               SizedBox(height: 2),
               TextFormField(
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[а-яА-Я]*')), // разрешаем только символы кириллицы без пробелов и других символов
+                  FilteringTextInputFormatter.allow(RegExp(r'[а-яА-Я]*')),
                 ],
                 maxLines: 2,
                 controller: commentController,
@@ -316,7 +327,7 @@ class _AddNewShoe extends State<AddNewShoe> {
               SizedBox(height: 2),
               TextFormField(
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[а-яА-Я]*')), // разрешаем только символы кириллицы без пробелов и других символов
+                  FilteringTextInputFormatter.allow(RegExp(r'[а-яА-Я\s]*')),
                 ],
                 controller: fioController,
                 focusNode: fioFocus,
@@ -355,9 +366,10 @@ class _AddNewShoe extends State<AddNewShoe> {
               ),
               SizedBox(height: 2),
               TextFormField(
+                keyboardType: TextInputType.number,
                 controller: numberController,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]+')), // разрешаем только буквы и цифры без символов
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]+')),
                 ],
                 focusNode: numberFocus,
                 onTap: () {
@@ -394,10 +406,7 @@ class _AddNewShoe extends State<AddNewShoe> {
         padding: EdgeInsets.only(
           left: 20,
           right: 20,
-          bottom: MediaQuery
-              .of(context)
-              .viewInsets
-              .bottom + 50,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 50,
         ),
         child: AddNewShoeButton(
           nameController: nameController,
@@ -406,7 +415,8 @@ class _AddNewShoe extends State<AddNewShoe> {
           commentController: commentController,
           fioController: fioController,
           numberController: numberController,
-          imagePath: _pickedImage?.path,
+          imagePath: imagePath,
+          imageFile: _pickedImage,
         ),
       ),
     );
@@ -414,25 +424,24 @@ class _AddNewShoe extends State<AddNewShoe> {
 }
 
 class AddNewShoeButton extends StatelessWidget {
-
   final TextEditingController nameController;
   final TextEditingController markController;
   final TextEditingController modelController;
   final TextEditingController commentController;
   final TextEditingController fioController;
   final TextEditingController numberController;
+  final File? imageFile; // Corrected parameter name
   final String? imagePath;
 
-
   const AddNewShoeButton({
-
     required this.nameController,
     required this.markController,
     required this.modelController,
     required this.commentController,
     required this.fioController,
     required this.numberController,
-    this.imagePath,
+    required this.imageFile,
+    required this.imagePath,
   });
 
   @override
@@ -451,8 +460,12 @@ class AddNewShoeButton extends StatelessWidget {
         ),
         onPressed: () async {
           int uniqueId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+          String? savedImagePath;
 
-          // Создаем экземпляр модели работы
+          if (imageFile != null) {
+            savedImagePath = await _saveImage(imageFile!); // Corrected method call
+          }
+
           ShoeModel shoe = ShoeModel(
             name: nameController.text,
             mark: markController.text,
@@ -460,17 +473,13 @@ class AddNewShoeButton extends StatelessWidget {
             comment: commentController.text,
             fio: fioController.text,
             number: numberController.text,
-            imagePath: imagePath,
+            imagePath: savedImagePath,
             id: uniqueId,
           );
 
-          // Открываем Hive box для работы с данными
           var boxshoe = await Hive.openBox<ShoeModel>('Shoes');
-
-          // Сохраняем данные в Hive
           await boxshoe.put(uniqueId, shoe);
 
-          // Переходим на главную страницу
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => ShoeMainPage()),
@@ -486,6 +495,14 @@ class AddNewShoeButton extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<String> _saveImage(File imageFile) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    final newImagePath = '${directory.path}/$fileName.png';
+    await imageFile.copy(newImagePath);
+    return newImagePath;
   }
 }
 
@@ -529,7 +546,7 @@ class ShoeModel extends HiveObject {
 
 class ShoeModelAdapter extends TypeAdapter<ShoeModel> {
   @override
-  final int typeId = 1; // Уникальный typeId для ShoeModel
+  final int typeId = 1;
 
   @override
   ShoeModel read(BinaryReader reader) {

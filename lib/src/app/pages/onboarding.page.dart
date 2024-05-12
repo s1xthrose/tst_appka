@@ -100,7 +100,7 @@ class GetStartedButton extends StatelessWidget {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
         },
         child: Text(
-          "Продолжить",
+          "Начать",
           style: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -133,7 +133,7 @@ class ContinueButton extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         child: Text(
-          "Начать",
+          "Продолжить",
           style: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.w600,

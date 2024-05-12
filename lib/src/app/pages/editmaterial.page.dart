@@ -221,9 +221,10 @@ class _EditMaterialPage extends State<EditMaterialPage> {
               ),
               SizedBox(height: 2),
               TextFormField(
+                keyboardType: TextInputType.number,
                 controller: countController,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]+')), // разрешаем только буквы и цифры без символов
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]+')), // разрешаем только буквы и цифры без символов
                 ],
                 decoration: InputDecoration(
 

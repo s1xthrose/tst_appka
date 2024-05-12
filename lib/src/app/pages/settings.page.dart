@@ -37,8 +37,7 @@ class SettingsPage extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.chevron_left, size: 28, color: _whiteColor),
           onPressed: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomePage()));
+            Navigator.pop(context);
           },
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tst_appka/src/app/pages/materialmain.page.dart';
@@ -69,17 +70,13 @@ class ShoeMainPage extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => ShoeCare()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ShoeCare()));
                   },
                   icon: Icon(Icons.event_note, color: _whiteColor),
                 ),
                 IconButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                        context, MaterialPageRoute(
-                        builder: (context) => SettingsPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
                   },
                   icon: Icon(Icons.settings, color: _whiteColor),
                 ),
@@ -333,6 +330,7 @@ class ShoeCard extends StatelessWidget {
                     child: shoe.imagePath != null &&
                         File(shoe.imagePath!).existsSync()
                         ? Container(
+
                       padding: const EdgeInsets.only(
                           top: 20, left: 20, right: 20),// Add padding here
                       child: Image.file(

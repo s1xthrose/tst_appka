@@ -76,17 +76,13 @@ class _MaterialMainPageState extends State<MaterialMainPage> {
               children: [
                 IconButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => ShoeCare()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ShoeCare()));
                   },
                   icon: Icon(Icons.event_note, color: _whiteColor),
                 ),
                 IconButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                        context, MaterialPageRoute(
-                        builder: (context) => SettingsPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
                   },
                   icon: Icon(Icons.settings, color: _whiteColor),
                 ),
