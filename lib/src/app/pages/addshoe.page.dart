@@ -163,9 +163,6 @@ class _AddNewShoe extends State<AddNewShoe> {
                 controller: nameController,
                 focusNode: nameFocus,
                 onTap: () {
-                  if (nameController.text == 'Кроссовки') {
-                    nameController.clear();
-                  }
                 },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),
@@ -203,9 +200,6 @@ class _AddNewShoe extends State<AddNewShoe> {
                 ],
                 focusNode: markFocus,
                 onTap: () {
-                  if (markController.text == 'Adidas') {
-                    markController.clear();
-                  }
                 },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),
@@ -240,9 +234,6 @@ class _AddNewShoe extends State<AddNewShoe> {
                 controller: modelController,
                 focusNode: modelFocus,
                 onTap: () {
-                  if (modelController.text == 'Samba') {
-                    modelController.clear();
-                  }
                 },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),

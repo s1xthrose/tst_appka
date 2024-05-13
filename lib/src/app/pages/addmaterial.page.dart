@@ -145,9 +145,6 @@ class _AddNewMaterial extends State<AddNewMaterial> {
                 controller: nameController,
                 focusNode: nameFocus,
                 onTap: () {
-                  if (nameController.text == 'Подошва') {
-                    nameController.clear();
-                  }
                 },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),
@@ -226,9 +223,7 @@ class _AddNewMaterial extends State<AddNewMaterial> {
                 ],
                 focusNode: countFocus,
                 onTap: () {
-                  if (countController.text == '10') {
-                    countController.clear();
-                  }
+
                 },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),

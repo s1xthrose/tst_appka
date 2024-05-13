@@ -141,9 +141,6 @@ class _AddWrkState extends State<AddWrk> {
                 controller: nameController,
                 focusNode: nameFocus,
                 onTap: () {
-                  if (nameController.text == 'Поменять подошву') {
-                    nameController.clear();
-                  }
                 },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(20, 12, 20, 12),
