@@ -134,17 +134,17 @@ class MaterialDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: mat.name),
                 decoration: InputDecoration(
-                  labelText: 'Название', // Название внутри инпута
+                  labelText: 'Название',
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -152,17 +152,17 @@ class MaterialDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: mat.comment),
                 decoration: InputDecoration(
-                  labelText: 'Описание (необязательно)', // Название внутри инпута
+                  labelText: 'Описание (необязательно)',
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -170,17 +170,17 @@ class MaterialDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: mat.count),
                 decoration: InputDecoration(
-                  labelText: 'Количество (штук)', // Название внутри инпута
+                  labelText: 'Количество (штук)',
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),

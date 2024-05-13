@@ -361,7 +361,7 @@ class _EditWrkState extends State<EditWrk> {
                     value: shoe.name,
                     child: Text(shoe.name),
                   );
-                }).toList() ?? [], // Use an empty list if shoeBox is not initialized
+                }).toList() ?? [],
               ),
               SizedBox(height: 20),
               Text(
@@ -428,7 +428,6 @@ class _EditWrkState extends State<EditWrk> {
               TextButton.icon(
                 onPressed: () {
                   setState(() {
-                    // Add a new material dropdown to the list
                     int newIndex = materialControllers.length;
                     materialControllers.add(TextEditingController());
                   });
@@ -509,7 +508,6 @@ class AddWrkBtn extends StatelessWidget {
           ),
         ),
         onPressed: () async {
-          // Create a new instance of the WorkModel
           WorkModel work = WorkModel(
             name: nameController.text,
             cost: costController.text,
@@ -519,19 +517,15 @@ class AddWrkBtn extends StatelessWidget {
             date: selectedDate.toString(),
           );
 
-          // Open the Hive box to work with data
           var box = await Hive.openBox<WorkModel>('works');
 
-          // Save data to Hive
           await box.add(work);
 
-          // Navigate to the home page
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => HomePage()),
           );
 
-          // Close the Box after use
           box.close();
         },
         child: Text(

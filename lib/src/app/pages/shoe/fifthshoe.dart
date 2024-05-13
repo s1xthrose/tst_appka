@@ -99,7 +99,6 @@ class FifthShoe extends StatelessWidget {
                 style: descriptionTextStyle,
               ),
               SizedBox(height: 12),
-              // Display additional information
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: shoeCareModel.additionalInfo

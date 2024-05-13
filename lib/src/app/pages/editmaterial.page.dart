@@ -135,7 +135,7 @@ class _EditMaterialPage extends State<EditMaterialPage> {
                         : ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.asset(
-                        'assets/mat/icon_material_placeholder.png', // Путь к изображению-заглушке
+                        'assets/mat/icon_material_placeholder.png',
                         fit: BoxFit.cover,
                         alignment: Alignment.center,
                       ),

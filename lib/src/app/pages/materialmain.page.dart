@@ -40,7 +40,7 @@ class _MaterialMainPageState extends State<MaterialMainPage> {
     return Scaffold(
       backgroundColor: _whiteColor,
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Disable the back arrow
+        automaticallyImplyLeading: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(12),
@@ -48,10 +48,10 @@ class _MaterialMainPageState extends State<MaterialMainPage> {
           ),
         ),
         backgroundColor: _primaryColor,
-        toolbarHeight: 92, // Set toolbar height here
-        centerTitle: true, // Center the title text
+        toolbarHeight: 92,
+        centerTitle: true,
         title: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10), // Add horizontal padding here
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -70,7 +70,7 @@ class _MaterialMainPageState extends State<MaterialMainPage> {
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10), // Add horizontal padding here
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -93,8 +93,8 @@ class _MaterialMainPageState extends State<MaterialMainPage> {
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10), // Add horizontal padding here
-            child: PageControlsIndicator(_pageController), // Pass the _pageController
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: PageControlsIndicator(_pageController),
           ),
         ),
       ),
@@ -111,7 +111,6 @@ class _MaterialMainPageState extends State<MaterialMainPage> {
               child: TextField(
                 controller: FindController,
                 onChanged: (value) {
-                  // Обновите переменную searchText при изменении текста в поле поиска
                   setState(() {
                     searchText = value;
                   });
@@ -352,11 +351,11 @@ class MaterialCard extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => MaterialDetailsPage(mat: mat),),);
       },
       child: Card(
-        color: Colors.white, // Changed to white color
-        elevation: 0, // Removed Card shadow
+        color: Colors.white,
+        elevation: 0,
         margin: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
         child: Container(
-          height: 100, // Fixed height to 80
+          height: 100,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -375,8 +374,8 @@ class MaterialCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 20),
                 child: ClipRRect(
                   child: SizedBox(
-                    width: 80.w, // Set width to 80
-                    height: 60.h, // Set height to 60
+                    width: 80.w,
+                    height: 60.h,
                     child: mat.imagePath != null &&
                         File(mat.imagePath!).existsSync()
                         ? Image.file(
@@ -417,10 +416,10 @@ class MaterialCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Align( // Align mat.count to the right
+              Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: EdgeInsets.only(right: 20, bottom: 0), // Add right padding here
+                  padding: EdgeInsets.only(right: 20, bottom: 0),
                   child: Text(
                     mat.count + "шт.",
                     style: GoogleFonts.inter(

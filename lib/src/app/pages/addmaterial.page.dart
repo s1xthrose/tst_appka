@@ -41,10 +41,8 @@ class _AddNewMaterial extends State<AddNewMaterial> {
     super.dispose();
   }
   Future<void> _pickImage() async {
-    // Request permission to access the photo library
     var status = await Permission.photos.request();
     if (status.isDenied) {
-      // Permission denied
       return;
     }
 
@@ -274,7 +272,7 @@ class AddNewMaterialButton extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController commentController;
   final TextEditingController countController;
-  final File? imageFile; // Corrected parameter name
+  final File? imageFile;
   final String? imagePath;
 
   const AddNewMaterialButton({

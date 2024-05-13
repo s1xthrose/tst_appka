@@ -76,7 +76,6 @@ class _OnboardingViewState extends State<OnboardingView> {
   }
 }
 
-// get_started_button.dart
 class GetStartedButton extends StatelessWidget {
   final BuildContext _context;
 
@@ -112,7 +111,6 @@ class GetStartedButton extends StatelessWidget {
   }
 }
 
-// continue_button.dart
 class ContinueButton extends StatelessWidget {
   final VoidCallback onPressed;
 

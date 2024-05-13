@@ -34,7 +34,7 @@ class ShoeMainPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: _whiteColor,
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Disable the back arrow
+        automaticallyImplyLeading: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(12),
@@ -42,10 +42,10 @@ class ShoeMainPage extends StatelessWidget {
           ),
         ),
         backgroundColor: _primaryColor,
-        toolbarHeight: 92, // Set toolbar height here
-        centerTitle: true, // Center the title text
+        toolbarHeight: 92,
+        centerTitle: true,
         title: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10), // Add horizontal padding here
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -64,7 +64,7 @@ class ShoeMainPage extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10), // Add horizontal padding here
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -87,15 +87,15 @@ class ShoeMainPage extends StatelessWidget {
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10), // Add horizontal padding here
-            child: PageControlsIndicator(_pageController), // Pass the _pageController
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: PageControlsIndicator(_pageController),
           ),
         ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(top: 14,left: 20,right: 20),
         child: FutureBuilder(
-          future: Hive.openBox<ShoeModel>('Shoes'), // Имя коробки здесь 'shoe'
+          future: Hive.openBox<ShoeModel>('Shoes'),
           builder: (BuildContext context, AsyncSnapshot<Box<ShoeModel>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -112,14 +112,14 @@ class ShoeMainPage extends StatelessWidget {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Two columns
-                    crossAxisSpacing: 10.0, // Spacing between columns
-                    mainAxisSpacing: 10.0, // Spacing between rows
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
                   ),
                   itemCount: box!.length,
                   itemBuilder: (BuildContext context, int index) {
                     final ShoeModel shoe = box.getAt(index)!;
-                    return ShoeCard(shoe: shoe); // Используйте ShoeCard
+                    return ShoeCard(shoe: shoe);
                   },
                 );
               }
@@ -303,11 +303,11 @@ class ShoeCard extends StatelessWidget {
         );
       },
       child: Card(
-        color: Colors.white, // Изменено на белый цвет
-        elevation: 0, // Убрана тень Card, так как мы добавим тень вручную
+        color: Colors.white,
+        elevation: 0,
         margin: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
         child: Container(
-          height: 220.h, // Set card height here
+          height: 220.h,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -325,21 +325,17 @@ class ShoeCard extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: AspectRatio(
-                  aspectRatio: 3.0, // Maintain aspect ratio
+                  aspectRatio: 3.0,
                   child: ClipRRect(
                     child: shoe.imagePath != null &&
                         File(shoe.imagePath!).existsSync()
                         ? Container(
 
                       padding: const EdgeInsets.only(
-                          top: 20, left: 20, right: 20),// Add padding here
+                          top: 20, left: 20, right: 20),
                       child: Image.file(
-                        // Display image if imagePath is not null and file exists
                         File(shoe.imagePath!),
                         fit: BoxFit.cover,
-                        // Ensure the image fills the entire container
-                        //alignment: Alignment.center,
-                        // Align the image to the center
                         width: 130.w,
                         height: 130.h,
                       ),
@@ -349,12 +345,8 @@ class ShoeCard extends StatelessWidget {
                       padding: const EdgeInsets.only(
                           top: 20, left: 20, right: 20),
                       child: Image.asset(
-                        // Display placeholder image if imagePath is null or file doesn't exist
                         'assets/addshoe/icon_placeholder.png',
                         fit: BoxFit.cover,
-                        // Ensure the image fills the entire container
-                        //alignment: Alignment.center,
-                        // Align the image to the center
                         width: 130.w,
                         height: 130.h,
                       ),

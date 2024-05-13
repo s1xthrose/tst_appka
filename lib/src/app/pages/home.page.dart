@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: _whiteColor,
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Disable the back arrow
+        automaticallyImplyLeading: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(12),
@@ -39,7 +39,7 @@ class HomePage extends StatelessWidget {
         toolbarHeight: 92, // Set toolbar height here
         centerTitle: true, // Center the title text
         title: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10), // Add horizontal padding here
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10), // Add horizontal padding here
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -81,8 +81,8 @@ class HomePage extends StatelessWidget {
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10), // Add horizontal padding here
-            child: PageControlsIndicator(_pageController), // Pass the _pageController
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: PageControlsIndicator(_pageController),
           ),
         ),
       ),
@@ -287,7 +287,6 @@ class WorkCard extends StatelessWidget {
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  // Action to perform when the icon is pressed
                 },
               ),
             ),

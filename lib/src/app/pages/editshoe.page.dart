@@ -41,7 +41,6 @@ class _EditNewShoeState extends State<EditNewShoe> {
   @override
   void initState() {
     super.initState();
-    // Установка начальных значений для контроллеров
     nameController.text = widget.shoe.name;
     markController.text = widget.shoe.mark;
     modelController.text = widget.shoe.model;
@@ -61,10 +60,8 @@ class _EditNewShoeState extends State<EditNewShoe> {
     super.dispose();
   }
   Future<void> _pickImage() async {
-    // Request permission to access the photo library
     var status = await Permission.photos.request();
     if (status.isDenied) {
-      // Permission denied
       return;
     }
 
@@ -75,14 +72,13 @@ class _EditNewShoeState extends State<EditNewShoe> {
       return;
     }
 
-    // Get the device directory path
     final directory = await getApplicationDocumentsDirectory();
     // Extract only the file name
     final fileName = pickedImageFile.path.split('/').last;
     final pickedImage = File(pickedImageFile.path);
     setState(() {
       _pickedImage = pickedImage;
-      imagePath = '${directory.path}/$fileName'; // Save the file path relative to the device directory
+      imagePath = '${directory.path}/$fileName';
     });
   }
   @override

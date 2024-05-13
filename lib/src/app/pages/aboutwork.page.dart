@@ -112,17 +112,17 @@ class WorkDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: work.name),
                 decoration: InputDecoration(
-                  labelText: 'Название', // Название внутри инпута
+                  labelText: 'Название',
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -131,17 +131,17 @@ class WorkDetailsPage extends StatelessWidget {
                 initialValue: formattedDate,
                 //controller: TextEditingController(text: work.date),
                 decoration: InputDecoration(
-                  labelText: 'Дата сдачи работы', // Название внутри инпута
+                  labelText: 'Дата сдачи работы',
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -156,10 +156,10 @@ class WorkDetailsPage extends StatelessWidget {
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -167,17 +167,17 @@ class WorkDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: work.comment),
                 decoration: InputDecoration(
-                  labelText: 'Комментарий', // Название внутри инпута
+                  labelText: 'Комментарий',
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -232,17 +232,17 @@ class WorkDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: work.shoe),
                 decoration: InputDecoration(
-                  labelText: 'Название', // Название внутри инпута
+                  labelText: 'Название',
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -266,17 +266,17 @@ class WorkDetailsPage extends StatelessWidget {
                         readOnly: true,
                         initialValue: material,
                         decoration: InputDecoration(
-                          labelText: 'Материал', // Название внутри инпута
+                          labelText: 'Материал',
                           labelStyle: GoogleFonts.inter(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: Colors.black,
                           ),
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                            borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                           ),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                            borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                           ),
                         ),
                       ),

@@ -134,17 +134,17 @@ class ShoeDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: shoe.name),
                 decoration: InputDecoration(
-                  labelText: "Название", // Название внутри инпута
+                  labelText: "Название",
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -152,17 +152,17 @@ class ShoeDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: shoe.mark),
                 decoration: InputDecoration(
-                  labelText: "Марка", // Название внутри инпута
+                  labelText: "Марка",
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -170,17 +170,17 @@ class ShoeDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: shoe.model),
                 decoration: InputDecoration(
-                  labelText: "Модель", // Название внутри инпута
+                  labelText: "Модель",
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -188,17 +188,17 @@ class ShoeDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: shoe.comment),
                 decoration: InputDecoration(
-                  labelText: "Комментарий", // Название внутри инпута
+                  labelText: "Комментарий",
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -215,17 +215,17 @@ class ShoeDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: shoe.fio),
                 decoration: InputDecoration(
-                  labelText: "ФИО", // Название внутри инпута
+                  labelText: "ФИО",
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),
@@ -233,17 +233,17 @@ class ShoeDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: shoe.number),
                 decoration: InputDecoration(
-                  labelText: "Контактный номер", // Название внутри инпута
+                  labelText: "Контактный номер",
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)), // Цвет рамки при фокусе
+                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3)),
                   ),
                 ),
               ),

@@ -421,7 +421,7 @@ class AddNewShoeButton extends StatelessWidget {
   final TextEditingController commentController;
   final TextEditingController fioController;
   final TextEditingController numberController;
-  final File? imageFile; // Corrected parameter name
+  final File? imageFile;
   final String? imagePath;
 
   const AddNewShoeButton({
@@ -454,7 +454,7 @@ class AddNewShoeButton extends StatelessWidget {
           String? savedImagePath;
 
           if (imageFile != null) {
-            savedImagePath = await _saveImage(imageFile!); // Corrected method call
+            savedImagePath = await _saveImage(imageFile!);
           }
 
           ShoeModel shoe = ShoeModel(
