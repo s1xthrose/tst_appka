@@ -242,10 +242,12 @@ class _AddNewMaterial extends State<AddNewMaterial> {
                 style: TextStyle(),
                 cursorHeight: 24,
               ),
+              SizedBox(height: 100),
             ],
           ),
         ),
       ),
+      resizeToAvoidBottomInset: false,
       bottomSheet: Container(
         color: _whiteColor,
         padding: EdgeInsets.only(
@@ -254,7 +256,7 @@ class _AddNewMaterial extends State<AddNewMaterial> {
           bottom: MediaQuery
               .of(context)
               .viewInsets
-              .bottom + 50,
+              .bottom + 50.h,
         ),
         child: AddNewMaterialButton(
           nameController: nameController,
@@ -337,10 +339,10 @@ class AddNewMaterialButton extends StatelessWidget {
 
   Future<String> _copyImage(File imageFile) async {
     final directory = await getApplicationDocumentsDirectory();
-    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    final newImagePath = '${directory.path}/$fileName.png';
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString() + '.png'; // Добавляем расширение .png к названию файла
+    final newImagePath = '${directory.path}/$fileName';
     await imageFile.copy(newImagePath);
-    return newImagePath;
+    return fileName; // Возвращаем только название файла, без пути к нему
   }
 }
 

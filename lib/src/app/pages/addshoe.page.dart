@@ -139,7 +139,7 @@ class _AddNewShoe extends State<AddNewShoe> {
                       : ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.asset(
-                      'assets/addshoe/icon_placeholder.png',
+                      'assets/addshoe/icon_1.png',
                       fit: BoxFit.cover,
                       alignment: Alignment.center,
                     ),
@@ -387,17 +387,18 @@ class _AddNewShoe extends State<AddNewShoe> {
                 style: TextStyle(),
                 cursorHeight: 24,
               ),
-              SizedBox(height: 100),
+              SizedBox(height: 300),
             ],
           ),
         ),
       ),
+      resizeToAvoidBottomInset: false,
       bottomSheet: Container(
         color: _whiteColor,
         padding: EdgeInsets.only(
           left: 20,
           right: 20,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 50,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 50.h,
         ),
         child: AddNewShoeButton(
           nameController: nameController,

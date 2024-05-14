@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tst_appka/src/app/pages/materialmain.page.dart';
 
@@ -55,7 +56,9 @@ class _EditMaterialPage extends State<EditMaterialPage> {
       return;
     }
 
-    final pickedImageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedImageFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     if (pickedImageFile == null) {
       return;
     }
@@ -135,7 +138,7 @@ class _EditMaterialPage extends State<EditMaterialPage> {
                         : ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.asset(
-                        'assets/mat/icon_material_placeholder.png',
+                        'assets/addshoe/icon_1.png',
                         fit: BoxFit.cover,
                         alignment: Alignment.center,
                       ),
@@ -251,6 +254,7 @@ class _EditMaterialPage extends State<EditMaterialPage> {
           ),
         ),
       ),
+      resizeToAvoidBottomInset: false,
       bottomSheet: Container(
         color: _whiteColor,
         padding: EdgeInsets.only(
@@ -262,8 +266,9 @@ class _EditMaterialPage extends State<EditMaterialPage> {
           nameController: nameController,
           commentController: commentController,
           countController: countController,
-          imagePath: _pickedImage?.path,
           shoeId: widget.mat.id,
+          imagePath: _pickedImage?.path,
+          imageFile: _pickedImage,
         ),
       ),
     );
@@ -274,15 +279,17 @@ class EditNewMaterialButton extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController commentController;
   final TextEditingController countController;
-  final String? imagePath;
   final int shoeId;
+  final File? imageFile;
+  final String? imagePath;
 
   const EditNewMaterialButton({
     required this.nameController,
     required this.commentController,
     required this.countController,
-    this.imagePath,
     required this.shoeId,
+    required this.imageFile,
+    required this.imagePath,
   });
 
   @override
@@ -302,13 +309,19 @@ class EditNewMaterialButton extends StatelessWidget {
         onPressed: () async {
           // Получаем экземпляр Hive box
           var box = await Hive.openBox<MaterialModel>('Mater');
+          String? savedImagePath;
 
+          if (imageFile != null) {
+            savedImagePath = await _copyImage(imageFile!);
+          } else if (imagePath != null) {
+            savedImagePath = await _copyImage(File(imagePath!));
+          }
           // Обновляем существующий объект обуви в Hive
           box.put(shoeId, MaterialModel(
             name: nameController.text,
             comment: commentController.text,
             count: countController.text,
-            imagePath: imagePath,
+            imagePath: savedImagePath,
             id: shoeId, // Передаем существующий id
           ));
 
@@ -328,5 +341,12 @@ class EditNewMaterialButton extends StatelessWidget {
         ),
       ),
     );
+  }
+  Future<String> _copyImage(File imageFile) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString() + '.png'; // Добавляем расширение .png к названию файла
+    final newImagePath = '${directory.path}/$fileName';
+    await imageFile.copy(newImagePath);
+    return fileName; // Возвращаем только название файла, без пути к нему
   }
 }

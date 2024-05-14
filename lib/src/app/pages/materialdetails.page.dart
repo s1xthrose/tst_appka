@@ -4,29 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
-import 'package:in_app_review/in_app_review.dart';
-import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tst_appka/src/app/pages/materialmain.page.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 import 'addmaterial.page.dart';
-import 'addwork.page.dart';
-
 import 'editmaterial.page.dart';
-import 'editwork.page.dart';
-import 'home.page.dart';
 
-// Extracted constants
+// Define MaterialModel class here or import it if it's defined elsewhere
+
 const Color _primaryColor = Color.fromRGBO(88, 86, 214, 1);
 const Color _whiteColor = Color.fromRGBO(255, 255, 255, 1);
-const double _buttonHeight = 50;
-const double _buttonWidth = 0.9;
-
-
 
 class MaterialDetailsPage extends StatelessWidget {
   final MaterialModel mat;
 
   const MaterialDetailsPage({Key? key, required this.mat}) : super(key: key);
+
+  Future<String> _getImagePath() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    return File('${appDocDir.path}/${mat.imagePath}').path;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +37,19 @@ class MaterialDetailsPage extends StatelessWidget {
           ),
         ),
         backgroundColor: _primaryColor,
-        title: Text(mat.name,
+        title: Text(
+          mat.name,
           style: GoogleFonts.inter(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: _whiteColor
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: _whiteColor,
           ),
         ),
         leading: IconButton(
           icon: Icon(Icons.chevron_left, size: 28, color: _whiteColor),
           onPressed: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => MaterialMainPage()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => MaterialMainPage()));
           },
         ),
         actions: [
@@ -64,27 +62,20 @@ class MaterialDetailsPage extends StatelessWidget {
                   return AlertDialog(
                     title: Text("Выберите действие", textAlign: TextAlign.center),
                     actions: [
-                      // Кнопка для удаления записи
                       TextButton(
                         child: Text("Удалить"),
                         onPressed: () {
-                          // Получаем экземпляр Hive Box
                           var box = Hive.box<MaterialModel>('Mater');
-                          // Удаляем запись из Hive Box
                           box.delete(mat.key);
-                          // Перенаправляем на домашнюю страницу
-                          Navigator.pushReplacement(
-                              context, MaterialPageRoute(builder: (context) => MaterialMainPage()));
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) => MaterialMainPage()));
                         },
                       ),
-                      // Кнопка для редактирования записи
                       TextButton(
                         child: Text("Редактировать"),
                         onPressed: () {
-                          //var box = Hive.box<WorkModel>('Mater');
-                          //box.delete(mat.key);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => EditMaterialPage(mat: mat)));
-                          //Navigator.pop(context); // Закрываем диалоговое окно
+                          Navigator.pushReplacement(
+                              context, MaterialPageRoute(builder: (context) => EditMaterialPage(mat: mat)));
                         },
                       ),
                     ],
@@ -95,7 +86,6 @@ class MaterialDetailsPage extends StatelessWidget {
           ),
         ],
       ),
-
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -111,24 +101,35 @@ class MaterialDetailsPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 100.h,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: mat.imagePath != null &&
-                      File(mat.imagePath!).existsSync()
-                      ? Image.file(
-                    File(mat.imagePath!),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                  )
-                      : Image.asset(
-                    'assets/mat/icon_material_placeholder.png',
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                  ),
-                ),
+              FutureBuilder<String>(
+                future: _getImagePath(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Ошибка загрузки изображения');
+                  } else {
+                    String imagePath = snapshot.data!;
+                    return SizedBox(
+                      width: double.infinity,
+                      height: 100.h,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: mat.imagePath != null && File(imagePath).existsSync()
+                            ? Image.file(
+                          File(imagePath),
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                        )
+                            : Image.asset(
+                          'assets/mat/icon_material_placeholder.png',
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                        ),
+                      ),
+                    );
+                  }
+                },
               ),
               TextFormField(
                 readOnly: true,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tst_appka/src/app/pages/addmaterial.page.dart';
@@ -26,6 +27,7 @@ const double _buttonWidth = 0.9;
 String searchText = '';
 final PageController _pageController = PageController(initialPage: 2);
 final TextEditingController FindController = TextEditingController();
+
 class MaterialMainPage extends StatefulWidget {
   const MaterialMainPage({Key? key}) : super(key: key);
 
@@ -344,96 +346,116 @@ class MaterialCard extends StatelessWidget {
 
   const MaterialCard({Key? key, required this.mat}) : super(key: key);
 
+  Future<String> _getImagePath() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    return File('${appDocDir.path}/${mat.imagePath}').path;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MaterialDetailsPage(mat: mat),),);
+    return FutureBuilder<String>(
+      future: _getImagePath(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Ошибка загрузки изображения');
+        } else {
+          String imagePath = snapshot.data!;
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MaterialDetailsPage(mat: mat)),
+              );
+            },
+            child: Card(
+              color: Colors.white,
+              elevation: 0,
+              margin: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+              child: Container(
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.25),
+                      offset: Offset(5, 5),
+                      blurRadius: 35,
+                      spreadRadius: -15,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: ClipRRect(
+                        child: SizedBox(
+                          width: 80,
+                          height: 60,
+                          child: mat.imagePath != null &&
+                              File(imagePath).existsSync()
+                              ? Image.file(
+                            File(imagePath),
+                            fit: BoxFit.cover,
+                          )
+                              : Image.asset(
+                            'assets/addshoe/icon_placeholder.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              mat.name,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              mat.comment,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 20, bottom: 0),
+                        child: Text(
+                          '${mat.count} шт.',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
       },
-      child: Card(
-        color: Colors.white,
-        elevation: 0,
-        margin: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-        child: Container(
-          height: 100,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.25),
-                offset: Offset(5, 5),
-                blurRadius: 35,
-                spreadRadius: -15,
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: ClipRRect(
-                  child: SizedBox(
-                    width: 80.w,
-                    height: 60.h,
-                    child: mat.imagePath != null &&
-                        File(mat.imagePath!).existsSync()
-                        ? Image.file(
-                      File(mat.imagePath!),
-                      fit: BoxFit.cover,
-                    )
-                        : Image.asset(
-                      'assets/addshoe/icon_placeholder.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        mat.name,
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        mat.comment,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 20, bottom: 0),
-                  child: Text(
-                    mat.count + "шт.",
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

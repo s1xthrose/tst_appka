@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:tst_appka/src/app/pages/home.page.dart';
@@ -451,17 +452,18 @@ class _EditWrkState extends State<EditWrk> {
                   ),
                 ),
               ),
-              SizedBox(height: 80),
+              SizedBox(height: 300),
             ],
           ),
         ),
       ),
+      resizeToAvoidBottomInset: false,
       bottomSheet: Container(
         color: _whiteColor,
         padding: EdgeInsets.only(
           left: 20,
           right: 20,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 50,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 50.h,
         ),
         child: AddWrkBtn(
           nameController: nameController,
