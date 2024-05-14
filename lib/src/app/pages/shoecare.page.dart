@@ -55,7 +55,6 @@ class ShoeCare extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Adding cards using ShoeCareModel data
               for (var i = 0; i < shoeCareModels.length; i++)
                 Column(
                   children: [
@@ -107,7 +106,7 @@ class ShoeCare extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: i == shoeCareModels.length - 1 ? 0 : 12), // Vertical spacing between cards
+                    SizedBox(height: i == shoeCareModels.length - 1 ? 0 : 12),
                   ],
                 ),
             ],
@@ -118,7 +117,6 @@ class ShoeCare extends StatelessWidget {
   }
 }
 
-// Models for cards and related pages
 final List<ShoeCareModel> shoeCareModels = [
   ShoeCareModel(
     imagePath: 'assets/shoecare/shoe.png',

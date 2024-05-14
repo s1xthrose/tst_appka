@@ -74,7 +74,6 @@ class WorkDetailsPage extends StatelessWidget {
                               context, MaterialPageRoute(builder: (context) => HomePage()));
                         },
                       ),
-                      // Кнопка для редактирования записи
                       TextButton(
                         child: Text("Редактировать"),
                         onPressed: () {
@@ -149,7 +148,7 @@ class WorkDetailsPage extends StatelessWidget {
                 readOnly: true,
                 controller: TextEditingController(text: work.cost),
                 decoration: InputDecoration(
-                  labelText: 'Стоимость', // Название внутри инпута
+                  labelText: 'Стоимость',
                   labelStyle: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,

@@ -497,7 +497,7 @@ class _AddWrkState extends State<AddWrk> {
   }
 }
 
-class AddWrkBtn extends StatelessWidget {
+class AddWrkBtn extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController costController;
   final TextEditingController commentController;
@@ -515,31 +515,74 @@ class AddWrkBtn extends StatelessWidget {
   });
 
   @override
+  _AddWrkBtnState createState() => _AddWrkBtnState();
+}
+
+class _AddWrkBtnState extends State<AddWrkBtn> {
+  bool isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.nameController.addListener(updateButtonState);
+    widget.costController.addListener(updateButtonState);
+    widget.shoeController.addListener(updateButtonState);
+    widget.materialControllers.forEach((controller) {
+      controller.addListener(updateButtonState);
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.nameController.removeListener(updateButtonState);
+    widget.costController.removeListener(updateButtonState);
+    widget.shoeController.removeListener(updateButtonState);
+    widget.materialControllers.forEach((controller) {
+      controller.removeListener(updateButtonState);
+    });
+    super.dispose();
+  }
+
+  void updateButtonState() {
+    setState(() {
+      isButtonEnabled =
+          widget.nameController.text.trim().isNotEmpty &&
+              widget.costController.text.trim().isNotEmpty &&
+              widget.shoeController.text.trim().isNotEmpty &&
+              widget.selectedDate != null &&
+              widget.materialControllers.every((controller) =>
+              controller.text.trim().isNotEmpty);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: _buttonHeight,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(_primaryColor),
+          backgroundColor:
+          MaterialStateProperty.all(isButtonEnabled ? _primaryColor : Colors.grey),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),
-        onPressed: () async {
+        onPressed: isButtonEnabled
+            ? () async {
           WorkModel work = WorkModel(
-            name: nameController.text,
-            cost: costController.text,
-            comment: commentController.text,
-            shoe: shoeController.text,
-            materials: List<String>.from(materialControllers.map((e) => e.text)),
-            date: selectedDate.toString(),
+            name: widget.nameController.text,
+            cost: widget.costController.text,
+            comment: widget.commentController.text,
+            shoe: widget.shoeController.text,
+            materials: List<String>.from(
+                widget.materialControllers.map((e) => e.text)),
+            date: widget.selectedDate.toString(),
           );
 
           var box = await Hive.openBox<WorkModel>('works');
-
           await box.add(work);
 
           Navigator.pushReplacement(
@@ -548,7 +591,8 @@ class AddWrkBtn extends StatelessWidget {
           );
 
           box.close();
-        },
+        }
+            : null,
         child: Text(
           "Готово",
           style: GoogleFonts.inter(

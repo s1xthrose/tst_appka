@@ -270,7 +270,7 @@ class _AddNewMaterial extends State<AddNewMaterial> {
   }
 }
 
-class AddNewMaterialButton extends StatelessWidget {
+class AddNewMaterialButton extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController commentController;
   final TextEditingController countController;
@@ -286,45 +286,82 @@ class AddNewMaterialButton extends StatelessWidget {
   });
 
   @override
+  _AddNewMaterialButtonState createState() => _AddNewMaterialButtonState();
+}
+
+class _AddNewMaterialButtonState extends State<AddNewMaterialButton> {
+  bool isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.nameController.addListener(updateButtonState);
+    widget.countController.addListener(updateButtonState);
+    // слушатели
+  }
+
+  @override
+  void dispose() {
+    widget.nameController.removeListener(updateButtonState);
+    widget.countController.removeListener(updateButtonState);
+    // удаляем слушатели, когда виджет уничтожается
+    super.dispose();
+  }
+
+  void updateButtonState() {
+    setState(() {
+      isButtonEnabled =
+          widget.nameController.text.trim().isNotEmpty &&
+              widget.countController.text.trim().isNotEmpty;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: _buttonHeight,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(_primaryColor),
+          backgroundColor: MaterialStateProperty.all(
+              isButtonEnabled ? _primaryColor : Colors.grey),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),
-        onPressed: () async {
+        onPressed: isButtonEnabled
+            ? () async {
           int uniqueId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
           String? savedImagePath;
 
-          if (imageFile != null) {
-            savedImagePath = await _copyImage(imageFile!);
-          } else if (imagePath != null) {
-            savedImagePath = await _copyImage(File(imagePath!));
+          if (widget.imageFile != null) {
+            savedImagePath = await _copyImage(widget.imageFile!);
+          } else if (widget.imagePath != null) {
+            savedImagePath =
+            await _copyImage(File(widget.imagePath!));
           }
 
           MaterialModel mat = MaterialModel(
-            name: nameController.text,
-            comment: commentController.text,
-            count: countController.text,
+            name: widget.nameController.text,
+            comment: widget.commentController.text,
+            count: widget.countController.text,
             imagePath: savedImagePath,
             id: uniqueId,
           );
 
-          var materialBox = await Hive.openBox<MaterialModel>('Mater');
+          var materialBox =
+          await Hive.openBox<MaterialModel>('Mater');
           await materialBox.put(uniqueId, mat);
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => MaterialMainPage()),
+            MaterialPageRoute(
+                builder: (context) => MaterialMainPage()),
           );
-        },
+        }
+            : null, // Если кнопка неактивна, устанавливаем onPressed в null
         child: Text(
           "Готово",
           style: GoogleFonts.inter(
@@ -339,10 +376,10 @@ class AddNewMaterialButton extends StatelessWidget {
 
   Future<String> _copyImage(File imageFile) async {
     final directory = await getApplicationDocumentsDirectory();
-    final fileName = DateTime.now().millisecondsSinceEpoch.toString() + '.png'; // Добавляем расширение .png к названию файла
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString() + '.png';
     final newImagePath = '${directory.path}/$fileName';
     await imageFile.copy(newImagePath);
-    return fileName; // Возвращаем только название файла, без пути к нему
+    return fileName;
   }
 }
 

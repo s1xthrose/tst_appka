@@ -36,8 +36,8 @@ class HomePage extends StatelessWidget {
           ),
         ),
         backgroundColor: _primaryColor,
-        toolbarHeight: 92, // Set toolbar height here
-        centerTitle: true, // Center the title text
+        toolbarHeight: 92,
+        centerTitle: true,
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Row(

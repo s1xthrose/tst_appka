@@ -404,7 +404,7 @@ class _AddNewShoe extends State<AddNewShoe> {
   }
 }
 
-class AddNewShoeButton extends StatelessWidget {
+class AddNewShoeButton extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController markController;
   final TextEditingController modelController;
@@ -426,36 +426,78 @@ class AddNewShoeButton extends StatelessWidget {
   });
 
   @override
+  _AddNewShoeButtonState createState() => _AddNewShoeButtonState();
+}
+
+class _AddNewShoeButtonState extends State<AddNewShoeButton> {
+  bool isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.nameController.addListener(updateButtonState);
+    widget.markController.addListener(updateButtonState);
+    widget.modelController.addListener(updateButtonState);
+    widget.fioController.addListener(updateButtonState);
+    widget.numberController.addListener(updateButtonState);
+  }
+
+  @override
+  void dispose() {
+    widget.nameController.removeListener(updateButtonState);
+    widget.markController.removeListener(updateButtonState);
+    widget.modelController.removeListener(updateButtonState);
+    widget.fioController.removeListener(updateButtonState);
+    widget.numberController.removeListener(updateButtonState);
+    super.dispose();
+  }
+
+  void updateButtonState() {
+    setState(() {
+      isButtonEnabled =
+          widget.nameController.text.trim().isNotEmpty &&
+              widget.markController.text.trim().isNotEmpty &&
+              widget.modelController.text.trim().isNotEmpty &&
+              widget.fioController.text.trim().isNotEmpty &&
+              widget.numberController.text.trim().isNotEmpty;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: _buttonHeight,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(_primaryColor),
+          backgroundColor: MaterialStateProperty.all(
+              isButtonEnabled ? _primaryColor : Colors.grey),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),
-        onPressed: () async {
-          int uniqueId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+        onPressed: isButtonEnabled
+            ? () async {
+          int uniqueId =
+              DateTime.now().millisecondsSinceEpoch ~/ 1000;
           String? savedImagePath;
 
-          if (imageFile != null) {
-            savedImagePath = await _copyImage(imageFile!);
-          } else if (imagePath != null) {
-            savedImagePath = await _copyImage(File(imagePath!));
+          if (widget.imageFile != null) {
+            savedImagePath = await _copyImage(widget.imageFile!);
+          } else if (widget.imagePath != null) {
+            savedImagePath =
+            await _copyImage(File(widget.imagePath!));
           }
 
           ShoeModel shoe = ShoeModel(
-            name: nameController.text,
-            mark: markController.text,
-            model: modelController.text,
-            comment: commentController.text,
-            fio: fioController.text,
-            number: numberController.text,
+            name: widget.nameController.text,
+            mark: widget.markController.text,
+            model: widget.modelController.text,
+            comment: widget.commentController.text,
+            fio: widget.fioController.text,
+            number: widget.numberController.text,
             imagePath: savedImagePath,
             id: uniqueId,
           );
@@ -467,7 +509,8 @@ class AddNewShoeButton extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => ShoeMainPage()),
           );
-        },
+        }
+            : null,
         child: Text(
           "Готово",
           style: GoogleFonts.inter(
@@ -482,7 +525,7 @@ class AddNewShoeButton extends StatelessWidget {
 
   Future<String> _copyImage(File imageFile) async {
     final directory = await getApplicationDocumentsDirectory();
-    final fileName = DateTime.now().millisecondsSinceEpoch.toString() + '.png'; // Добавляем расширение .png к названию файла
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString() + '.png';
     final newImagePath = '${directory.path}/$fileName';
     await imageFile.copy(newImagePath);
     return fileName; // Возвращаем только название файла, без пути к нему

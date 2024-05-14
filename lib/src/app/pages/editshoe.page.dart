@@ -393,7 +393,7 @@ class _EditNewShoeState extends State<EditNewShoe> {
   }
 }
 
-class EditNewShoeButton extends StatelessWidget {
+class EditNewShoeButton extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController markController;
   final TextEditingController modelController;
@@ -417,47 +417,87 @@ class EditNewShoeButton extends StatelessWidget {
   });
 
   @override
+  _EditNewShoeButtonState createState() => _EditNewShoeButtonState();
+}
+
+class _EditNewShoeButtonState extends State<EditNewShoeButton> {
+  bool isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.nameController.addListener(updateButtonState);
+    widget.markController.addListener(updateButtonState);
+    widget.modelController.addListener(updateButtonState);
+    widget.fioController.addListener(updateButtonState);
+    widget.numberController.addListener(updateButtonState);
+  }
+
+  @override
+  void dispose() {
+    widget.nameController.removeListener(updateButtonState);
+    widget.markController.removeListener(updateButtonState);
+    widget.modelController.removeListener(updateButtonState);
+    widget.fioController.removeListener(updateButtonState);
+    widget.numberController.removeListener(updateButtonState);
+    super.dispose();
+  }
+
+  void updateButtonState() {
+    setState(() {
+      isButtonEnabled =
+          widget.nameController.text.trim().isNotEmpty &&
+              widget.markController.text.trim().isNotEmpty &&
+              widget.modelController.text.trim().isNotEmpty &&
+              widget.fioController.text.trim().isNotEmpty &&
+              widget.numberController.text.trim().isNotEmpty;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: _buttonHeight,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(_primaryColor),
+          backgroundColor: MaterialStateProperty.all(
+              isButtonEnabled ? _primaryColor : Colors.grey),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),
-        onPressed: () async {
-          // Получаем экземпляр Hive box
-          var box = await Hive.openBox<ShoeModel>('Shoes');
+        onPressed: isButtonEnabled
+            ? () async {
           String? savedImagePath;
 
-          if (imageFile != null) {
-            savedImagePath = await _copyImage(imageFile!);
-          } else if (imagePath != null) {
-            savedImagePath = await _copyImage(File(imagePath!));
+          if (widget.imageFile != null) {
+            savedImagePath = await _copyImage(widget.imageFile!);
+          } else if (widget.imagePath != null) {
+            savedImagePath =
+            await _copyImage(File(widget.imagePath!));
           }
-          // Обновляем существующий объект обуви в Hive
-          box.put(shoeId, ShoeModel(
-            name: nameController.text,
-            mark: markController.text,
-            model: modelController.text,
-            comment: commentController.text,
-            fio: fioController.text,
-            number: numberController.text,
-            id: shoeId,
+
+          var box = await Hive.openBox<ShoeModel>('Shoes');
+          box.put(widget.shoeId, ShoeModel(
+            name: widget.nameController.text,
+            mark: widget.markController.text,
+            model: widget.modelController.text,
+            comment: widget.commentController.text,
+            fio: widget.fioController.text,
+            number: widget.numberController.text,
+            id: widget.shoeId,
             imagePath: savedImagePath,
           ));
 
-          // Переходим на главную страницу
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => ShoeMainPage()),
           );
-        },
+        }
+            : null,
         child: Text(
           "Готово",
           style: GoogleFonts.inter(
@@ -471,7 +511,7 @@ class EditNewShoeButton extends StatelessWidget {
   }
   Future<String> _copyImage(File imageFile) async {
     final directory = await getApplicationDocumentsDirectory();
-    final fileName = DateTime.now().millisecondsSinceEpoch.toString() + '.png'; // Добавляем расширение .png к названию файла
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString() + '.png';
     final newImagePath = '${directory.path}/$fileName';
     await imageFile.copy(newImagePath);
     return fileName; // Возвращаем только название файла, без пути к нему
