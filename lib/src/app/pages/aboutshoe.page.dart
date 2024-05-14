@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tst_appka/src/app/pages/shoemain.page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'addshoe.page.dart';
@@ -25,6 +26,11 @@ class ShoeDetailsPage extends StatelessWidget {
   final ShoeModel shoe;
 
   const ShoeDetailsPage({Key? key, required this.shoe}) : super(key: key);
+
+  Future<String> _getImagePath() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    return File('${appDocDir.path}/${shoe.imagePath}').path;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,24 +117,35 @@ class ShoeDetailsPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 100.h,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: shoe.imagePath != null &&
-                      File(shoe.imagePath!).existsSync()
-                      ? Image.file(
-                    File(shoe.imagePath!),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                  )
-                      : Image.asset(
-                    'assets/addshoe/icon_1.png',
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                  ),
-                ),
+              FutureBuilder<String>(
+                future: _getImagePath(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Ошибка загрузки изображения');
+                  } else {
+                    String imagePath = snapshot.data!;
+                    return SizedBox(
+                      width: double.infinity,
+                      height: 100.h,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: shoe.imagePath != null && File(imagePath).existsSync()
+                            ? Image.file(
+                          File(imagePath),
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                        )
+                            : Image.asset(
+                          'assets/mat/icon_material_placeholder.png',
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                        ),
+                      ),
+                    );
+                  }
+                },
               ),
               TextFormField(
                 readOnly: true,

@@ -71,14 +71,9 @@ class _EditNewShoeState extends State<EditNewShoe> {
     if (pickedImageFile == null) {
       return;
     }
-
-    final directory = await getApplicationDocumentsDirectory();
-    // Extract only the file name
-    final fileName = pickedImageFile.path.split('/').last;
     final pickedImage = File(pickedImageFile.path);
     setState(() {
       _pickedImage = pickedImage;
-      imagePath = '${directory.path}/$fileName';
     });
   }
   @override
@@ -389,8 +384,9 @@ class _EditNewShoeState extends State<EditNewShoe> {
           commentController: commentController,
           fioController: fioController,
           numberController: numberController,
-          imagePath: _pickedImage?.path,
           shoeId: widget.shoe.id,
+          imagePath: _pickedImage?.path,
+          imageFile: _pickedImage,
         ),
       ),
     );
@@ -404,8 +400,9 @@ class EditNewShoeButton extends StatelessWidget {
   final TextEditingController commentController;
   final TextEditingController fioController;
   final TextEditingController numberController;
-  final String? imagePath;
   final int shoeId;
+  final File? imageFile;
+  final String? imagePath;
 
   const EditNewShoeButton({
     required this.nameController,
@@ -414,8 +411,9 @@ class EditNewShoeButton extends StatelessWidget {
     required this.commentController,
     required this.fioController,
     required this.numberController,
-    this.imagePath,
     required this.shoeId,
+    required this.imageFile,
+    required this.imagePath,
   });
 
   @override
@@ -435,7 +433,13 @@ class EditNewShoeButton extends StatelessWidget {
         onPressed: () async {
           // Получаем экземпляр Hive box
           var box = await Hive.openBox<ShoeModel>('Shoes');
+          String? savedImagePath;
 
+          if (imageFile != null) {
+            savedImagePath = await _copyImage(imageFile!);
+          } else if (imagePath != null) {
+            savedImagePath = await _copyImage(File(imagePath!));
+          }
           // Обновляем существующий объект обуви в Hive
           box.put(shoeId, ShoeModel(
             name: nameController.text,
@@ -444,8 +448,8 @@ class EditNewShoeButton extends StatelessWidget {
             comment: commentController.text,
             fio: fioController.text,
             number: numberController.text,
-            imagePath: imagePath,
-            id: shoeId, // Передаем существующий id
+            id: shoeId,
+            imagePath: savedImagePath,
           ));
 
           // Переходим на главную страницу
@@ -464,5 +468,12 @@ class EditNewShoeButton extends StatelessWidget {
         ),
       ),
     );
+  }
+  Future<String> _copyImage(File imageFile) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString() + '.png'; // Добавляем расширение .png к названию файла
+    final newImagePath = '${directory.path}/$fileName';
+    await imageFile.copy(newImagePath);
+    return fileName; // Возвращаем только название файла, без пути к нему
   }
 }

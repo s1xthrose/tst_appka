@@ -17,6 +17,7 @@ import 'aboutwork.page.dart';
 import 'addshoe.page.dart';
 import 'addwork.page.dart';
 import 'home.page.dart';
+import 'materialdetails.page.dart';
 
 // Extracted constants
 const Color _primaryColor = Color.fromRGBO(88, 86, 214, 1);
@@ -291,100 +292,113 @@ class ShoeCard extends StatelessWidget {
 
   const ShoeCard({Key? key, required this.shoe}) : super(key: key);
 
+  Future<String> _getImagePath() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    return File('${appDocDir.path}/${shoe.imagePath}').path;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ShoeDetailsPage(shoe: shoe),
-          ),
-        );
-      },
-      child: Card(
-        color: Colors.white,
-        elevation: 0,
-        margin: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-        child: Container(
-          height: 220.h,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.25),
-                offset: Offset(5, 5),
-                blurRadius: 35,
-                spreadRadius: -15,
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                flex: 1,
-                child: AspectRatio(
-                  aspectRatio: 3.0,
-                  child: ClipRRect(
-                    child: shoe.imagePath != null &&
-                        File(shoe.imagePath!).existsSync()
-                        ? Container(
-
-                      padding: const EdgeInsets.only(
-                          top: 20, left: 20, right: 20),
-                      child: Image.file(
-                        File(shoe.imagePath!),
-                        fit: BoxFit.cover,
-                        width: 130.w,
-                        height: 130.h,
+    return FutureBuilder<String>(
+        future: _getImagePath(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Ошибка загрузки изображения');
+          } else {
+            String imagePath = snapshot.data!;
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ShoeDetailsPage(shoe: shoe)),
+                );
+              },
+              child: Card(
+                color: Colors.white,
+                elevation: 0,
+                margin: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                child: Container(
+                  height: 220.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromRGBO(0, 0, 0, 0.25),
+                        offset: Offset(5, 5),
+                        blurRadius: 35,
+                        spreadRadius: -15,
                       ),
-                    )
-
-                        : Container(
-                      padding: const EdgeInsets.only(
-                          top: 20, left: 20, right: 20),
-                      child: Image.asset(
-                        'assets/addshoe/icon_placeholder.png',
-                        fit: BoxFit.cover,
-                        width: 130.w,
-                        height: 130.h,
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: AspectRatio(
+                          aspectRatio: 3.0,
+                          child: ClipRRect(
+                            child: shoe.imagePath != null &&
+                                File(imagePath).existsSync()
+                                ? Container(
+                              padding: const EdgeInsets.only(
+                                  top: 20, left: 20, right: 20),
+                              child: Image.file(
+                                File(imagePath),
+                                fit: BoxFit.cover,
+                                width: 130.w,
+                                height: 130.h,
+                              ),
+                            )
+                                : Container(
+                              padding: const EdgeInsets.only(
+                                  top: 20, left: 20, right: 20),
+                              child: Image.asset(
+                                'assets/addshoe/icon_placeholder.png',
+                                fit: BoxFit.cover,
+                                width: 130.w,
+                                height: 130.h,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 12, bottom: 20, left: 20, right: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              shoe.name,
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.inter(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              shoe.mark,
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 12, bottom: 20, left: 0, right: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      shoe.name,
-                      textAlign: TextAlign.left,
-                      style: GoogleFonts.inter(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      shoe.mark,
-                      textAlign: TextAlign.left,
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            );
+          }
+        });
   }
 }

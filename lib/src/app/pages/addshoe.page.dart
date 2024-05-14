@@ -49,7 +49,6 @@ class _AddNewShoe extends State<AddNewShoe> {
     numberController.dispose();
     super.dispose();
   }
-
   Future<void> _pickImage() async {
     var status = await Permission.photos.request();
     if (status.isDenied) {
@@ -62,20 +61,10 @@ class _AddNewShoe extends State<AddNewShoe> {
     if (pickedImageFile == null) {
       return;
     }
-
-    final newImagePath = await _saveImage(File(pickedImageFile.path));
+    final pickedImage = File(pickedImageFile.path);
     setState(() {
-      _pickedImage = File(pickedImageFile.path);
-      imagePath = newImagePath;
+      _pickedImage = pickedImage;
     });
-  }
-
-  Future<String> _saveImage(File imageFile) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final fileName = imageFile.path.split('/').last;
-    final newImagePath = '${directory.path}/$fileName';
-    await imageFile.copy(newImagePath);
-    return newImagePath;
   }
 
   @override
@@ -407,7 +396,7 @@ class _AddNewShoe extends State<AddNewShoe> {
           commentController: commentController,
           fioController: fioController,
           numberController: numberController,
-          imagePath: imagePath,
+          imagePath: _pickedImage?.path,
           imageFile: _pickedImage,
         ),
       ),
@@ -455,7 +444,9 @@ class AddNewShoeButton extends StatelessWidget {
           String? savedImagePath;
 
           if (imageFile != null) {
-            savedImagePath = await _saveImage(imageFile!);
+            savedImagePath = await _copyImage(imageFile!);
+          } else if (imagePath != null) {
+            savedImagePath = await _copyImage(File(imagePath!));
           }
 
           ShoeModel shoe = ShoeModel(
@@ -489,12 +480,12 @@ class AddNewShoeButton extends StatelessWidget {
     );
   }
 
-  Future<String> _saveImage(File imageFile) async {
+  Future<String> _copyImage(File imageFile) async {
     final directory = await getApplicationDocumentsDirectory();
-    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    final newImagePath = '${directory.path}/$fileName.png';
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString() + '.png'; // Добавляем расширение .png к названию файла
+    final newImagePath = '${directory.path}/$fileName';
     await imageFile.copy(newImagePath);
-    return newImagePath;
+    return fileName; // Возвращаем только название файла, без пути к нему
   }
 }
 
