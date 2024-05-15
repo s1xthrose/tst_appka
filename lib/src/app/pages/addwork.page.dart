@@ -54,16 +54,15 @@ class _AddWrkState extends State<AddWrk> {
     dateFocus = FocusNode();
     materialControllers = [TextEditingController()];
 
-    openBoxes().then((_) {
-      setState(() {
-        _areBoxesInitialized = true;
-      });
-    });
+    openBoxes();
   }
 
   Future<void> openBoxes() async {
     shoeBox = await Hive.openBox<ShoeModel>('Shoes');
     materialBox = await Hive.openBox<MaterialModel>('Mater');
+    setState(() {
+      _areBoxesInitialized = true;
+    });
   }
 
   @override
@@ -111,7 +110,8 @@ class _AddWrkState extends State<AddWrk> {
           },
         ),
       ),
-      body: SingleChildScrollView(
+      body: _areBoxesInitialized
+          ? SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -475,7 +475,8 @@ class _AddWrkState extends State<AddWrk> {
             ],
           ),
         ),
-      ),
+      )
+          : Center(child: CircularProgressIndicator()),
       resizeToAvoidBottomInset: false,
       bottomSheet: Container(
         color: _whiteColor,
